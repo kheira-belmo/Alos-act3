@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../index");
 
 // API tests
+
 describe("GET /owners", function () {
   it("get owners", function (done) {
     request(app).get("/owners").expect(200, done);
