@@ -4,10 +4,12 @@ const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const app = express();
 
+const router = express.Router();
+
 // Middleware
 app.use(express.json());
 
-app.get("/owners", async (req, res) => {
+router.get("/api/owners", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     res.status(200).json(data.owners);
@@ -15,7 +17,8 @@ app.get("/owners", async (req, res) => {
     res.status(500).send(error);
   }
 });
-app.get("/api/owners/:id", async (req, res) => {
+
+router.get("/api/owners/:id", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     let owners = data.owners;
@@ -28,7 +31,7 @@ app.get("/api/owners/:id", async (req, res) => {
   }
 });
 
-app.post("/api/owners", async (req, res) => {
+router.post("/api/owners", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const schema = Joi.object({
@@ -63,7 +66,7 @@ app.post("/api/owners", async (req, res) => {
     res.status(500).send(error);
   }
 });
-app.put("/api/owners/:id", async (req, res) => {
+router.put("/api/owners/:id", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const owners = data.owners;
@@ -89,7 +92,7 @@ app.put("/api/owners/:id", async (req, res) => {
   }
 });
 
-app.delete("/api/owners/:id", async (req, res) => {
+router.delete("/api/owners/:id", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const owners = data.owners;
@@ -110,7 +113,7 @@ app.delete("/api/owners/:id", async (req, res) => {
   }
 });
 
-app.get("/api/pets", async (req, res) => {
+router.get("/api/pets", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     res.status(200).send(data.pets);
@@ -119,7 +122,7 @@ app.get("/api/pets", async (req, res) => {
   }
 });
 
-app.get("/api/posts", async (req, res) => {
+router.get("/api/posts", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const pets = data.pets;
@@ -138,7 +141,7 @@ app.get("/api/posts", async (req, res) => {
   }
 });
 
-app.post("/api/posts", async (req, res) => {
+router.post("/api/posts", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const schema = Joi.object({
@@ -188,7 +191,7 @@ app.post("/api/posts", async (req, res) => {
   }
 });
 
-app.put("/api/pets", async (req, res) => {
+router.put("/api/pets", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const schema = Joi.object({
@@ -235,7 +238,7 @@ app.put("/api/pets", async (req, res) => {
   }
 });
 
-app.delete("/api/pets", async (req, res) => {
+router.delete("/api/pets", async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const schema = Joi.object({
@@ -267,6 +270,8 @@ app.delete("/api/pets", async (req, res) => {
     return;
   }
 });
+
+app.use("/v1", router);
 
 app.listen(8080, () => {
   console.log("Serveur à l'écoute");
