@@ -32,14 +32,12 @@ router.post("/api/connect", async (req, res) => {
   if (!valid) res.status(400).send("Email or password not valid");
   const token = await generateAccessToken(req.body.email);
 
-  res
-    .status(200)
-    .json({
-      email: isExist.email,
-      name: isExist.name,
-      address: isExist.password,
-      token,
-    });
+  res.status(200).json({
+    email: isExist.email,
+    name: isExist.name,
+    address: isExist.password,
+    token,
+  });
 });
 router.post("/api/signup", async (req, res) => {
   try {
@@ -97,7 +95,7 @@ router.get("/api/owners", authenticateToken, async (req, res) => {
   }
 });
 
-router.get("/api/owners/:id", async (req, res) => {
+router.get("/api/owners/:id", authenticateToken, async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     let owners = data.owners;
@@ -110,7 +108,7 @@ router.get("/api/owners/:id", async (req, res) => {
   }
 });
 
-router.put("/api/owners/:id", async (req, res) => {
+router.put("/api/owners/:id", authenticateToken, async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const owners = data.owners;
@@ -136,7 +134,7 @@ router.put("/api/owners/:id", async (req, res) => {
   }
 });
 
-router.delete("/api/owners/:id", async (req, res) => {
+router.delete("/api/owners/:id", authenticateToken, async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const owners = data.owners;
@@ -157,7 +155,7 @@ router.delete("/api/owners/:id", async (req, res) => {
   }
 });
 
-router.get("/api/pets", async (req, res) => {
+router.get("/api/pets", authenticateToken, async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     res.status(200).send(data.pets);
@@ -166,7 +164,7 @@ router.get("/api/pets", async (req, res) => {
   }
 });
 
-router.get("/api/posts", async (req, res) => {
+router.get("/api/posts", authenticateToken, async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const pets = data.pets;
@@ -185,7 +183,7 @@ router.get("/api/posts", async (req, res) => {
   }
 });
 
-router.post("/api/posts", async (req, res) => {
+router.post("/api/posts", authenticateToken, async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const schema = Joi.object({
@@ -235,7 +233,7 @@ router.post("/api/posts", async (req, res) => {
   }
 });
 
-router.put("/api/pets", async (req, res) => {
+router.put("/api/pets", authenticateToken, async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const schema = Joi.object({
@@ -282,7 +280,7 @@ router.put("/api/pets", async (req, res) => {
   }
 });
 
-router.delete("/api/pets", async (req, res) => {
+router.delete("/api/pets", authenticateToken, async (req, res) => {
   try {
     const data = JSON.parse(await fs.readFileSync("db.json"));
     const schema = Joi.object({
